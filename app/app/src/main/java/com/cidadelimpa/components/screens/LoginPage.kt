@@ -11,9 +11,12 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
@@ -27,9 +30,10 @@ import com.cidadelimpa.ui.theme.Aqua
 import com.cidadelimpa.ui.theme.DarkBlue
 import com.cidadelimpa.ui.theme.roboto_bold
 import com.cidadelimpa.ui.theme.roboto_regular
+import com.cidadelimpa.view_model.LoginViewModel
 
 @Composable
-fun LoginPage(navController: NavController)
+fun LoginPage(navController: NavController, loginViewModel: LoginViewModel)
 {
     Box(modifier = Modifier.fillMaxSize())
     {
@@ -54,12 +58,8 @@ fun LoginPage(navController: NavController)
 
             Spacer(modifier = Modifier.height(25.dp))
 
-            var cpf = remember {
-                mutableStateOf("")
-            }
-            var senha = remember {
-                mutableStateOf("")
-            }
+            val cpf by loginViewModel.cpf.observeAsState(initial = "")
+            val pwd by loginViewModel.pwd.observeAsState(initial = "")
 
             Form{
                 Input(
@@ -68,7 +68,10 @@ fun LoginPage(navController: NavController)
                         keyboardType = KeyboardType.Number
                     ),
                     placeholder = "Digite seu CPF",
-                    state = cpf
+                    value = cpf,
+                    onValueChange = {
+                        loginViewModel.onCpfChange(it)
+                    }
                 )
                 Input(
                     name = "Senha",
@@ -76,7 +79,11 @@ fun LoginPage(navController: NavController)
                         keyboardType = KeyboardType.NumberPassword
                     ),
                     placeholder = "Digite sua senha (8 números)",
-                    state = senha
+                    value = pwd,
+                    onValueChange = {
+                        loginViewModel.onPwdChange(it)
+                    },
+                    visualTransformation = PasswordVisualTransformation()
                 )
                 Text(
                     text = "Esqueceu sua senha?"

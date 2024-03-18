@@ -10,6 +10,8 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -19,6 +21,7 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
@@ -34,9 +37,10 @@ import com.cidadelimpa.ui.theme.Aqua
 import com.cidadelimpa.ui.theme.DarkBlue
 import com.cidadelimpa.ui.theme.roboto_bold
 import com.cidadelimpa.ui.theme.roboto_regular
+import com.cidadelimpa.view_model.SignUpViewModel
 
 @Composable
-fun SignUpPage(navController: NavController)
+fun SignUpPage(navController: NavController, signUpViewModel: SignUpViewModel)
 {
     Box(modifier = Modifier.fillMaxSize())
     {
@@ -61,52 +65,58 @@ fun SignUpPage(navController: NavController)
 
             Spacer(modifier = Modifier.height(35.dp))
 
-            var nome = remember {
-                mutableStateOf("")
-            }
-            var cpf = remember {
-                mutableStateOf("")
-            }
-            var dataNascimento = remember {
-                mutableStateOf("")
-            }
-            var cep = remember {
-                mutableStateOf("")
-            }
-            var senha = remember {
-                mutableStateOf("")
-            }
+            val nome by signUpViewModel.name.observeAsState(initial = "")
+            val cpf by signUpViewModel.cpf.observeAsState(initial = "")
+            val birthDate by signUpViewModel.birthDate.observeAsState(initial = "")
+            val cep by signUpViewModel.cep.observeAsState(initial = "")
+            val pwd by signUpViewModel.pwd.observeAsState(initial = "")
 
             Form {
                 Input(
                     name = "Nome",
                     keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Words),
                     placeholder = "Digite seu nome",
-                    state = nome
+                    value = nome,
+                    onValueChange = {
+                        signUpViewModel.onNameChange(it)
+                    }
                 )
                 Input(
                     name = "CPF",
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                     placeholder = "Digite seu CPF",
-                    state = cpf
+                    value = cpf,
+                    onValueChange = {
+                        signUpViewModel.onCpfChange(it)
+                    }
                 )
                 Input(
                     name = "Data de Nascimento",
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                     placeholder = "Digite sua Data de Nascimento",
-                    state = dataNascimento
+                    value = birthDate,
+                    onValueChange = {
+                        signUpViewModel.onBirthDateChange(it)
+                    }
                 )
                 Input(
                     name = "CEP",
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                     placeholder = "Digite seu CEP",
-                    state = cep
+                    value = cep,
+                    onValueChange = {
+                        signUpViewModel.onCepChange(it)
+                    }
                 )
                 Input(
                     name = "Senha",
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.NumberPassword),
                     placeholder = "Digite sua senha (8 números)",
-                    state = senha
+                    value = pwd,
+                    onValueChange = {
+                        signUpViewModel.onPwdChange(it)
+                    },
+                    visualTransformation = PasswordVisualTransformation()
                 )
             }
             val styledText = buildAnnotatedString {

@@ -16,6 +16,8 @@ import com.cidadelimpa.components.screens.LoginPage
 import com.cidadelimpa.components.screens.SignUpPage
 import com.cidadelimpa.components.screens.WelcomePage
 import com.cidadelimpa.ui.theme.CidadeLimpaTheme
+import com.cidadelimpa.view_model.LoginViewModel
+import com.cidadelimpa.view_model.SignUpViewModel
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -34,8 +36,8 @@ class MainActivity : ComponentActivity() {
                         startDestination = "welcome"
                     ) {
                         composable(route = "welcome") { WelcomePage(navController) }
-                        composable(route = "login") { LoginPage(navController) }
-                        composable(route = "sign_up") { SignUpPage(navController) }
+                        composable(route = "login") { LoginPage(navController, LoginViewModel()) }
+                        composable(route = "sign_up") { SignUpPage(navController, SignUpViewModel()) }
                     }
                 }
             }
