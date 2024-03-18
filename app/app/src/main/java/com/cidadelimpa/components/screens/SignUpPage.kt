@@ -12,8 +12,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.SpanStyle
@@ -33,6 +31,7 @@ import com.cidadelimpa.components.form.Form
 import com.cidadelimpa.components.form.Input
 import com.cidadelimpa.components.images.LogoSM
 import com.cidadelimpa.components.layout.ColumnCenter
+import com.cidadelimpa.model.Address
 import com.cidadelimpa.ui.theme.Aqua
 import com.cidadelimpa.ui.theme.DarkBlue
 import com.cidadelimpa.ui.theme.roboto_bold
@@ -70,6 +69,10 @@ fun SignUpPage(navController: NavController, signUpViewModel: SignUpViewModel)
             val birthDate by signUpViewModel.birthDate.observeAsState(initial = "")
             val cep by signUpViewModel.cep.observeAsState(initial = "")
             val pwd by signUpViewModel.pwd.observeAsState(initial = "")
+            val address by signUpViewModel.address.observeAsState(initial = Address())
+
+            val addressText = if (address.logradouro == "") ""
+             else "${address.logradouro}, ${address.bairro}, ${address.cidade} - ${address.uf}"
 
             Form {
                 Input(
@@ -91,21 +94,25 @@ fun SignUpPage(navController: NavController, signUpViewModel: SignUpViewModel)
                     }
                 )
                 Input(
-                    name = "Data de Nascimento",
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                    placeholder = "Digite sua Data de Nascimento",
-                    value = birthDate,
-                    onValueChange = {
-                        signUpViewModel.onBirthDateChange(it)
-                    }
-                )
-                Input(
                     name = "CEP",
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                     placeholder = "Digite seu CEP",
                     value = cep,
                     onValueChange = {
                         signUpViewModel.onCepChange(it)
+                        signUpViewModel.getAddressByCep(it)
+                    }
+                )
+                Input(
+                    name = "Endereço",
+                    enabled = false,
+                    required = false,
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                    placeholder = "Digite o CEP no campo acima",
+                    value = addressText,
+                    onValueChange = {
+                        signUpViewModel.onCepChange(it)
+                        signUpViewModel.getAddressByCep(it)
                     }
                 )
                 Input(

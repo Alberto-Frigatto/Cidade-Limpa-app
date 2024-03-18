@@ -19,6 +19,8 @@ import com.cidadelimpa.ui.theme.Red
 @Composable
 fun Input(
     name: String,
+    required: Boolean = true,
+    enabled: Boolean = true,
     keyboardOptions: KeyboardOptions,
     placeholder: String,
     value: String,
@@ -26,22 +28,26 @@ fun Input(
     visualTransformation: VisualTransformation = VisualTransformation.None
 ) {
     OutlinedTextField(
-        value = "$value",
+        value = value,
         singleLine = true,
         onValueChange = {
             onValueChange(it)
         },
+        enabled = enabled,
         modifier = Modifier.fillMaxWidth(),
         keyboardOptions = keyboardOptions,
         label = {
             Row(verticalAlignment = Alignment.Top) {
-                Text(text = "$name")
-                Text(text = "*", color = Red)
+                Text(text = name)
+                if (required)
+                {
+                    Text(text = "*", color = Red)
+                }
             }
         },
         shape = RoundedCornerShape(7.dp),
         placeholder = {
-            Text(text = "$placeholder")
+            Text(text = placeholder)
         },
         colors = TextFieldDefaults.colors(
             focusedContainerColor = Color.Transparent,
