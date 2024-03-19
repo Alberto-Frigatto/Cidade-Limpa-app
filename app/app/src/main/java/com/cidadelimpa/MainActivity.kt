@@ -12,6 +12,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.cidadelimpa.components.screens.HistoryPage
 import com.cidadelimpa.components.screens.HomePage
 import com.cidadelimpa.components.screens.LoginPage
 import com.cidadelimpa.components.screens.SignUpPage
@@ -32,12 +33,13 @@ class MainActivity : ComponentActivity() {
                     val navController = rememberNavController()
                     NavHost(
                         navController = navController,
-                        startDestination = "home"
+                        startDestination = "history"
                     ) {
                         composable(route = "welcome") { WelcomePage(navController) }
                         composable(route = "login") { LoginPage(navController, LoginViewModel()) }
                         composable(route = "sign_up") { SignUpPage(navController, SignUpViewModel()) }
                         composable(route = "home") { HomePage(navController) }
+                        composable(route = "history") { HistoryPage(navController) }
                     }
                 }
             }

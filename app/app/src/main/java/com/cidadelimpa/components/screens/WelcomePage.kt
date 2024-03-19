@@ -94,15 +94,18 @@ fun WelcomePage(navController: NavController)
         ) {
             SocialMediaLogin(
                 image = painterResource(id = R.drawable.google),
-                contentDescription = "Google"
+                contentDescription = "Google",
+                onClickAction = { navController.navigate("home") }
             )
             SocialMediaLogin(
                 image = painterResource(id = R.drawable.facebook),
-                contentDescription = "Facebook"
+                contentDescription = "Facebook",
+                onClickAction = { navController.navigate("home") }
             )
             SocialMediaLogin(
                 image = painterResource(id = R.drawable.gov),
-                contentDescription = "Gov.br"
+                contentDescription = "Gov.br",
+                onClickAction = { navController.navigate("home") }
             )
         }
     }

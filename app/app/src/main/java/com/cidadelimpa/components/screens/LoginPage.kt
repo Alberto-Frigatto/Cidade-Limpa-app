@@ -92,7 +92,7 @@ fun LoginPage(navController: NavController, loginViewModel: LoginViewModel)
                 Spacer(modifier = Modifier.height(30.dp))
                 
                 FillButton(
-                    onClickAction = { /*TODO*/ },
+                    onClickAction = { navController.navigate("home") },
                     horizontalArrangement = Arrangement.Center,
                     background = DarkBlue,
                     contentColor = Aqua

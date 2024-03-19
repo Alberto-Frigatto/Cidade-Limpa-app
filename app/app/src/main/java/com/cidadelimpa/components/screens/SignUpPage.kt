@@ -154,7 +154,7 @@ fun SignUpPage(navController: NavController, signUpViewModel: SignUpViewModel)
             Spacer(modifier = Modifier.height(30.dp))
 
             FillButton(
-                onClickAction = { /*TODO*/ },
+                onClickAction = { navController.navigate("login") },
                 horizontalArrangement = Arrangement.Center,
                 background = DarkBlue,
                 contentColor = Aqua
