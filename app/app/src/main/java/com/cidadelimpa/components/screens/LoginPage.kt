@@ -40,7 +40,7 @@ fun LoginPage(navController: NavController, loginViewModel: LoginViewModel)
         BackButton(
             onClickAction = { navController.navigate("welcome") },
             modifier = Modifier
-                .padding(0.dp)
+                .padding(top = 15.dp)
                 .align(Alignment.TopStart)
         )
 

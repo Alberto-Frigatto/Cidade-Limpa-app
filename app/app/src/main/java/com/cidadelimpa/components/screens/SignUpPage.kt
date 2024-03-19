@@ -46,7 +46,7 @@ fun SignUpPage(navController: NavController, signUpViewModel: SignUpViewModel)
         BackButton(
             onClickAction = { navController.navigate("welcome") },
             modifier = Modifier
-                .padding(0.dp)
+                .padding(top = 15.dp)
                 .align(Alignment.TopStart)
         )
 
@@ -111,7 +111,6 @@ fun SignUpPage(navController: NavController, signUpViewModel: SignUpViewModel)
                     placeholder = "Digite o CEP no campo acima",
                     value = addressText,
                     onValueChange = {
-                        signUpViewModel.onCepChange(it)
                         signUpViewModel.getAddressByCep(it)
                     }
                 )
