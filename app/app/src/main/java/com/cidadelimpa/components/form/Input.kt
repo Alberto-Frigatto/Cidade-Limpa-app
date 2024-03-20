@@ -11,9 +11,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.input.OffsetMapping
+import androidx.compose.ui.text.input.TransformedText
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import com.cidadelimpa.ui.theme.DarkBlue
+import com.cidadelimpa.ui.theme.ExtraLightGrey
+import com.cidadelimpa.ui.theme.MediumGrey
 import com.cidadelimpa.ui.theme.Red
 
 @Composable
@@ -25,11 +30,31 @@ fun Input(
     placeholder: String,
     value: String,
     onValueChange: (newValue: String) -> Unit,
-    visualTransformation: VisualTransformation = VisualTransformation.None
+    mask: String? = null,
+    visualTransformation: VisualTransformation? = null,
+    error: Boolean = false
 ) {
+    val transformation = if (mask != null && visualTransformation == null) {
+
+        val offsetMapping = createOffsetMapping(mask)
+
+        VisualTransformation { text ->
+            val transformedText = applyMask(mask, text.text)
+
+            TransformedText(
+                text = AnnotatedString(transformedText),
+                offsetMapping = offsetMapping
+            )
+        }
+
+    } else {
+        VisualTransformation.None
+    }
+
     OutlinedTextField(
         value = value,
         singleLine = true,
+        isError = error,
         onValueChange = {
             onValueChange(it)
         },
@@ -53,8 +78,54 @@ fun Input(
             focusedContainerColor = Color.Transparent,
             unfocusedContainerColor = Color.Transparent,
             focusedIndicatorColor = DarkBlue,
-            focusedLabelColor = DarkBlue
+            focusedLabelColor = DarkBlue,
+            errorTextColor = Red,
+            errorContainerColor = Color(0xFFFFF1F6),
+            disabledContainerColor = ExtraLightGrey,
+            disabledTextColor = Color(0xFF272727),
+            disabledLabelColor = Color(0xFF505050)
         ),
-        visualTransformation = visualTransformation
+        visualTransformation = visualTransformation ?: transformation
     )
+}
+
+private fun applyMask(mask: String, text: String): String {
+    var index = 0
+    val maskedText = StringBuilder()
+    for (char in mask) {
+        if (index >= text.length) break
+        if (char == '#') {
+            maskedText.append(text[index])
+            index++
+        } else {
+            maskedText.append(char)
+        }
+    }
+    return maskedText.toString()
+}
+
+private fun createOffsetMapping(mask: String): OffsetMapping {
+    return object : OffsetMapping {
+        override fun originalToTransformed(offset: Int): Int {
+            var transformedOffset = offset
+            var originalOffset = 0
+
+            mask.forEachIndexed { index, char ->
+                if (index >= transformedOffset) return@forEachIndexed
+                if (char != '#') transformedOffset++
+                if (index < offset && char != '#') originalOffset++
+            }
+            return transformedOffset
+        }
+
+        override fun transformedToOriginal(offset: Int): Int {
+            var originalOffset = offset
+
+            mask.forEachIndexed { index, char ->
+                if (index >= originalOffset) return@forEachIndexed
+                if (char != '#') originalOffset++
+            }
+            return originalOffset
+        }
+    }
 }

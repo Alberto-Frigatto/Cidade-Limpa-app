@@ -33,7 +33,7 @@ class MainActivity : ComponentActivity() {
                     val navController = rememberNavController()
                     NavHost(
                         navController = navController,
-                        startDestination = "history"
+                        startDestination = "welcome"
                     ) {
                         composable(route = "welcome") { WelcomePage(navController) }
                         composable(route = "login") { LoginPage(navController, LoginViewModel()) }

@@ -37,22 +37,6 @@ class SignUpViewModel: ViewModel() {
         }
     }
 
-    private val _birthDate = MutableLiveData<String>()
-    val birthDate: LiveData<String> = _birthDate
-
-    fun onBirthDateChange(newBirthDate: String)
-    {
-        val maxLength = 8
-
-        if (newBirthDate.length <= maxLength)
-        {
-            _birthDate.value = newBirthDate.replace(
-                regex = Regex(pattern = "[^0-9]"),
-                replacement = ""
-            )
-        }
-    }
-
     private val _cep = MutableLiveData<String>()
     val cep: LiveData<String> = _cep
 

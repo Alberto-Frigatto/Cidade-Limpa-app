@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
@@ -13,10 +14,12 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
@@ -28,6 +31,7 @@ import com.cidadelimpa.components.images.LogoLG
 import com.cidadelimpa.components.layout.ColumnCenter
 import com.cidadelimpa.ui.theme.Aqua
 import com.cidadelimpa.ui.theme.DarkBlue
+import com.cidadelimpa.ui.theme.Red
 import com.cidadelimpa.ui.theme.roboto_bold
 import com.cidadelimpa.ui.theme.roboto_regular
 import com.cidadelimpa.view_model.LoginViewModel
@@ -61,6 +65,9 @@ fun LoginPage(navController: NavController, loginViewModel: LoginViewModel)
             val cpf by loginViewModel.cpf.observeAsState(initial = "")
             val pwd by loginViewModel.pwd.observeAsState(initial = "")
 
+            var cpfError by remember { mutableStateOf(false) }
+            var pwdError by remember { mutableStateOf(false) }
+
             Form{
                 Input(
                     name = "CPF",
@@ -71,8 +78,19 @@ fun LoginPage(navController: NavController, loginViewModel: LoginViewModel)
                     value = cpf,
                     onValueChange = {
                         loginViewModel.onCpfChange(it)
-                    }
+                    },
+                    mask = "###.###.###-##",
+                    error = cpfError
                 )
+                if(cpfError) {
+                    Text(
+                        text = "O CPF é obrigatório",
+                        modifier = Modifier.fillMaxWidth(),
+                        fontSize = 14.sp,
+                        color = Red,
+                        textAlign = TextAlign.Right
+                    )
+                }
                 Input(
                     name = "Senha",
                     keyboardOptions = KeyboardOptions(
@@ -83,8 +101,18 @@ fun LoginPage(navController: NavController, loginViewModel: LoginViewModel)
                     onValueChange = {
                         loginViewModel.onPwdChange(it)
                     },
-                    visualTransformation = PasswordVisualTransformation()
+                    visualTransformation = PasswordVisualTransformation(),
+                    error = pwdError
                 )
+                if(pwdError) {
+                    Text(
+                        text = "A Senha é obrigatória",
+                        modifier = Modifier.fillMaxWidth(),
+                        fontSize = 14.sp,
+                        color = Red,
+                        textAlign = TextAlign.Right
+                    )
+                }
                 Text(
                     text = "Esqueceu sua senha?"
                 )
@@ -92,7 +120,13 @@ fun LoginPage(navController: NavController, loginViewModel: LoginViewModel)
                 Spacer(modifier = Modifier.height(30.dp))
                 
                 FillButton(
-                    onClickAction = { navController.navigate("home") },
+                    onClickAction = {
+                        cpfError = cpf.isEmpty()
+                        pwdError = pwd.isEmpty()
+
+                        if (!cpfError && !pwdError)
+                            navController.navigate("home")
+                    },
                     horizontalArrangement = Arrangement.Center,
                     background = DarkBlue,
                     contentColor = Aqua
